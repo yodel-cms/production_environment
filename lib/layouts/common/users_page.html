@@ -1,0 +1,26 @@
+<h1>Users</h1>
+<ul>
+  <% site.users.each do |user| %>
+    <li>
+      <a href="<%= user.path %>"><%= user.name %> (<%= user.email %>)</a>
+      <%= user.delete_link 'Delete', confirm: 'Are you sure you want to delete this user?', class: 'action' %>
+    </li>
+  <% end %>
+</ul>
+<a class="action" href="#" id="add_user">Add User</a>
+
+<div id="new_user" style="display: none; padding-top: 30px; padding-bottom: 30px">
+  <% form_for site.users.new, path, remote: true do |form| %>
+    <%= form.field_row :name %>
+    <%= form.field_row :email %>
+    <%= form.field_row :password %>
+    <input type="submit" value='Add'>
+  <% end %>
+</div>
+
+<script>
+  $('#add_user').click(function(event) {
+    $('#new_user').slideToggle();
+    event.preventDefault();
+  })
+</script>
