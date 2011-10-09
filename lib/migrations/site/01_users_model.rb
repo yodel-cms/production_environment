@@ -1,7 +1,7 @@
 class UsersMigration < Migration
   def self.up(site)
     site.users.modify do |users|
-      usres.modify_field :name, type: :string, validations: {required: {}}
+      users.modify_field :name, type: :string, validations: {required: {}}
       add_many  :sites
       users.add_mixin site.pages
     end
