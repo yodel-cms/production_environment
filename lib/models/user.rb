@@ -1,10 +1,6 @@
 # because user passwords are hashed both on a production server, and locally, a
 # random salt can't be added to the password
 class User < Record
-  SALT_ALPHABET = []
-  SALT_LENGTH = 0
-  PASS_LENGTH = 8
-  
   before_save :set_username
   def set_username
     self.username = self.email
