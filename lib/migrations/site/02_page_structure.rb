@@ -11,19 +11,23 @@ class PageStructureMigration < Migration
     home.save
     
     # sites
-    sites = site.record_proxy_pages.new
+    # work around eigenmodel/record_class_name bug
+    site.record_proxy_pages.create_model :sites_page do |sites_pages|
+      sites_pages.record_class_name = 'SitesPage'
+    end
+    
+    sites = site.sites_pages.new
     sites.title = 'Sites'
     sites.parent = home
+    sites.page_layout = 'sites'
     sites.show_record_layout = 'site'
     sites.save
-    sites.create_eigenmodel
-    sites.model.record_class_name = 'SitesPage'
-    sites.model.save
     
     # users
     users = site.pages.new
     users.title = 'Users'
     users.parent = home
+    users.page_layout = 'users'
     users.save
     users.create_eigenmodel
     users.model.default_child_model = site.users

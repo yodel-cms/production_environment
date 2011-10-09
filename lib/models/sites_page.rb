@@ -12,6 +12,7 @@ class SitesPage < RecordProxyPage
   # get list of sites
   respond_to :get do
     with :json do
+      {success: true, sites: [{id: 123, name: "test site"}]}
     end
   end
   
