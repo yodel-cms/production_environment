@@ -1,8 +1,8 @@
 class UsersMigration < Migration
   def self.up(site)
     site.users.modify do |users|
-      remove_field :username
-      add_field :username, :alias, of: :email
+      remove_field :email
+      add_field :email, :alias, of: :username
       
       remove_field :first_name
       remove_field :last_name

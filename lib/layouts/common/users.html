@@ -16,7 +16,7 @@
 <div id="new_user" style="display: none; padding-top: 30px; padding-bottom: 30px">
   <% form_for site.users.new, path, remote: true do |form| %>
     <%= form.field_row :name %>
-    <%= form.field_row :email %>
+    <%= form.field_row :username %>
     <%= form.field_row :password %>
     <input type="submit" value='Add'>
   <% end %>
