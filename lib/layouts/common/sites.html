@@ -1,0 +1,13 @@
+<h1>Sites</h1>
+<ul>
+  <% if records.count > 0 %>
+    <% records.each do |site| %>
+      <li>
+        <a href="<%= site.path %>"><%= site.name %></a>
+        <%= site.delete_link 'Delete', confirm: 'Are you sure you want to delete this site?', class: 'action' %>
+      </li>
+    <% end %>
+  <% else %>
+    <li>No Sites</li>
+  <% end %>
+</ul>
