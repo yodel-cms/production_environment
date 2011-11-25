@@ -6,7 +6,7 @@ class ProductionSitesPage < RecordProxyPage
   end
   
   def all_records
-    Site.all
+    Site.all.reject {|site| site.name == 'yodel'}
   end
   
   def construct_record
@@ -47,7 +47,7 @@ class ProductionSitesPage < RecordProxyPage
       # install the post receive hook to deploy the site on pushes, and
       # allow pushes to a non bare repository
       Dir.chdir(new_site.root_directory) do
-        unless `git config 'receive.denyCurrentBranch' 'ignore'`.strip.empty?
+        unless `#{Yodel.config.git_path} config 'receive.denyCurrentBranch' 'ignore'`.strip.empty?
           new_site.destroy
           return {success: false, reason: 'Unable to configure git repository'}
         end
