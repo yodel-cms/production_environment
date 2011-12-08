@@ -58,7 +58,7 @@ class ProductionSitesPage < RecordProxyPage
           file.write "#!/bin/bash
           cd ..
           env -i git reset --hard
-          yodel deploy `basename $PWD`
+          #{Yodel.config.deploy_command} deploy `basename $PWD`
           "
         end
         FileUtils.chmod(0755, post_receive_script)
