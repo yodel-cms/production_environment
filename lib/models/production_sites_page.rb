@@ -13,20 +13,32 @@ class ProductionSitesPage < RecordProxyPage
     Site.new
   end
   
+  
   # get list of sites
   respond_to :get do
     with :json do
       prompt_login and return {success: false, reason: 'Login required'} unless logged_in?
+      
       if params['id']
-        requested_site = Site.find(BSON::ObjectId.from_string(params['id']))
-        return {success: false, reason: 'Site not found'} if requested_site.nil?
-        return {success: false, reason: 'Unauthorised'} unless current_user.sites.include?(requested_site)
-        {success: true, migrations: {}, domains: {}}
+        # authorisation
+        return {success: false, reason: 'Site not found'} if record.nil?
+        return {success: false, reason: 'Unauthorised'} unless current_user.sites.include?(record)
+        
+        # users are represented by name and email address; id is used to distinguish between users
+        # client side when a user's name or email is changed (the id remains constant)
+        site_users = users.where(sites: requested_site.id).all.collect do |user|
+          {id: user.id, name: user.name, email: user.email}
+        end
+        
+        {success: true, domains: requested_site.domains, users: site_users, latest_revision: requested_site.latest_revision}
+        
       else
+        # if no site is requested, send back a list of sites available to the user
         {success: true, sites: current_user.sites.collect {|site| {id: site.id, name: site.name}}}
       end
     end
   end
+  
   
   # create a site
   respond_to :post do
@@ -72,6 +84,44 @@ class ProductionSitesPage < RecordProxyPage
       end
       
       {success: true, id: new_site.id}
+    end
+  end
+  
+  
+  # update a site; currently only supports adding/removing users to a site
+  respond_to :put do
+    with :json do
+      prompt_login and return {success: false, reason: 'Login required'} unless logged_in?
+      
+      # authorisation
+      return {success: false, reason: 'Site not found'} if record.nil?
+      return {success: false, reason: 'Unauthorised'} unless current_user.sites.include?(record)
+      
+      # find the user by id or email
+      if params['user_id']
+        user = site.users.find(BSON::ObjectId.from_string(params['user_id']))
+      elsif params['user_email']
+        user = site.users.where(email: params['user_email']).first
+      else
+        return {success: false, reason: 'No user id or email address provided'}
+      end
+      return {success: false, reason: 'Unknown user'} if user.nil?
+      
+      # add or remove the user from the site
+      case params['action']
+      when 'add'
+        user.sites << record
+      when 'remove'
+        user.sites.delete(record)
+      else
+        return {success: false, reason: 'Unknown action'}
+      end
+      
+      if user.save
+        {success: true}
+      else
+        {success: false, reason: 'Save failed'}
+      end
     end
   end
 end

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" href="/core/css/reset.css" type="text/css">
+    <link rel="stylesheet" href="/core/css/core.css" type="text/css">
+    <link rel="stylesheet" href="/css/screen.css" type="text/css">
+    <title>Yodel</title>
+    <style>
+      li, ul {
+        border: none !important;
+        color: #444;
+      }
+      
+      ul {
+        padding-top: 20px;
+      }
+      
+      a {
+        color: #777;
+      }
+      
+      p {
+        font-size: 15px;
+        color: #444;
+        line-height: 18px;
+      }
+
+      article {
+        padding-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <article>
+      <header>
+        <div id="lip"></div>
+        <h1>yodel</h1>
+      </header>
+      <p>Yodel is a Ruby CMS and web development environment. You may be looking for one of the sites hosted on this server:</p>
+      <ul>
+        <% Site.all.each do |site| %>
+          <% unless site.name == 'yodel' %>
+            <li><%= site.name %> - <a href="<%= site.domains.first %>"><%= site.domains.first %></a></li>
+          <% end %>
+        <% end %>
+      </ul>
+    </article>
+  </body>
+</html>

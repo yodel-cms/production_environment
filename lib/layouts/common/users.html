@@ -13,7 +13,7 @@
 </ul>
 <a class="action" href="#" id="add_user">Add User</a>
 
-<div id="new_user" style="display: none; padding-top: 30px; padding-bottom: 30px">
+<div id="new_user" style="display: none">
   <% form_for site.users.new, path, remote: true do |form| %>
     <%= form.field_row :name %>
     <%= form.field_row :username %>

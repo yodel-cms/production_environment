@@ -12,6 +12,6 @@ class ProductionUser < User
   end
   
   def passwords_match?(password)
-    self.password_was == password
+    self.password_was == password ? self : nil
   end
 end

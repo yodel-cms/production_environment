@@ -36,3 +36,29 @@ a.action {
 h1 + form, p + form {
   margin-top: 20px;
 }
+
+dl {
+  width: 800px;
+  padding-top: 10px;
+}
+
+dt, dd {
+  display: inline-block;
+  font-size: 13px;
+  line-height: 22px;
+}
+
+dt {
+  width: 130px;
+  color: #777;
+}
+
+dd {
+  width: 660px;
+  color: #333;
+}
+
+#new_user {
+  padding-top: 30px;
+  padding-bottom: 30px;
+}

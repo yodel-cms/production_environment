@@ -1,0 +1,79 @@
+<h1>Site: <%= record.name %></h1>
+<dl>
+  <dt>Created:</dt>
+  <dd><%= record.created_at %></dd>
+  <dt>Latest Revision:</dt>
+  <dd><%= record.latest_revision_date %> (#<%= record.latest_revision %>)</dd>
+</dl>
+
+<h2>Domains</h2>
+<ul>
+  <% record.domains.each do |domain| %>
+    <li><a href="http://<%= domain %>/"><%= domain %></a></li>
+  <% end %>
+</ul>
+
+<h2>Users</h2>
+<ul>
+  <% site.users.where(sites: record.id).all.each do |user| %>
+    <li>
+      <%= user.name %> (<%= user.email %>)
+      <a href="#" class="action remove_user" data-user-id="<%= user.id %>">Remove</a>
+    </li>
+  <% end %>
+</ul>
+
+<% non_site_users = site.users.all.reject {|user| user.sites.include?(record)} %>
+
+<% unless non_site_users.empty? %>
+  <a href="#" class="action" id="add_user">Add</a>
+  <div id="new_user" style="display: none">
+    <select id="new_user_id">
+      <% non_site_users.each do |user| %>
+        <option value="<%= user.id %>"><%= user.name %> (<%= user.email %>)</option>
+      <% end %>
+    </select>
+    <input type="submit" value='Add' id="add_user_btn">
+  </div>
+<% end %>
+
+
+<script>
+  $('#add_user').click(function(event) {
+    $('#new_user').slideToggle();
+    event.preventDefault();
+  });
+  
+  $('#add_user_btn').click(function(event) {
+    var request = jQuery.post('/sites.json', {'_method': 'PUT', id: '<%= record.id %>', user_id: $('#new_user_id').val(), action: 'add'}, 'json');
+    event.preventDefault();
+    
+    request.success(function(data, textStatus, jqXHR) {
+      if(data.success)
+        window.location.reload();
+      else
+        alert(data.reason);
+    });
+    request.error(function(jqXHR, textStatus, errorThrown) {
+      alert('A connection error occurred while adding this user');
+    });
+  });
+  
+  $('.remove_user').click(function(event) {
+    event.preventDefault();
+    
+    if(!confirm('Are you sure you want to delete this user?'))
+      return;
+    
+    var request = jQuery.post('/sites.json', {'_method': 'PUT', id: '<%= record.id %>', user_id: $(this).attr('data-user-id'), action: 'remove'}, 'json');
+    request.success(function(data, textStatus, jqXHR) {
+      if(data.success)
+        window.location.reload();
+      else
+        alert(data.reason);
+    });
+    request.error(function(jqXHR, textStatus, errorThrown) {
+      alert('A connection error occurred while removing this user');
+    });
+  });
+</script>

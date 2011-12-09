@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Yodel - Login</title>
+    <style type="text/css">
+      body {
+        background-color: #F3F3F3;
+        font-family: HelveticaNeue, Helvetica, sans-serif;
+      }
+
+      #modal {
+        width: 620px;
+        background-color: white;
+        border-bottom: 1px solid #e0e0e0;
+        border-radius: 5px;
+        -moz-border-radius: 5px;
+        position: relative;
+        margin: 200px auto 0px auto;
+        padding: 81px 33px 35px 33px;
+      }
+
+      h2 {
+        color: #333;
+        font-size: 25px;
+        font-weight: normal;
+        padding: 0px;
+        margin: 0px 0px 14px 0px;
+      }
+
+      p {
+        color: #777;
+        font-size: 16px;
+        margin: 0px;
+        padding: 0px;
+      }
+      
+      a {
+        color: #777;
+      }
+      
+      #lip {
+        position: absolute;
+        top: 60px;
+        left: -16px;
+        width: 0px;
+        height: 0px;
+        border: 8px solid transparent;
+        border-top-color: #E5A700;
+        border-right-color: #E5A700;
+        padding: 0px;
+        margin: 0px;
+      }
+      
+      h1 {
+        position: absolute;
+        background-color: #FFC900;
+        height: 53px;
+        width: 170px;
+        left: -16px;
+        top: 8px;
+        padding: 0px;
+        margin: 0px;
+        color: transparent;
+        background-repeat: no-repeat;
+        background-position: center 10px;
+        background-image: url(/admin/images/yodel.png);
+      }
+      
+      p.error {
+        background-color: #D6362E;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        color: white;
+        padding: 7px 15px;
+        margin-bottom: 18px;
+        line-height: 18px;
+        font-size: 13px;
+      }
+      
+      label {
+        display: inline-block;
+        margin-bottom: 10px;
+        width: 80px;
+        font-size: 13px;
+        vertical-align: middle;
+      }
+      
+      input[type=text], input[type=password] {
+        display: inline-block;
+        margin-bottom: 10px;
+        -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.08) inset;
+        -moz-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.08) inset;
+        box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.08) inset;
+        border-radius: 3px;
+        -moz-border-radius: 3px;
+        border: 1px solid #bbb;
+        height: 20px;
+        width: 300px;
+        outline: none;
+        font-size: 11px;
+        vertical-align: middle;
+        padding: 3px 5px;    
+      }
+    </style>
+  </head>
+  <body>
+    <div id="modal">
+      <div id="lip"></div>
+      <h1>yodel</h1>
+      <h2>Login</h2>
+      <% if flash[:permission_denied] %>
+        <p class="error">Please login to continue</p>
+      <% end %>
+      <% if flash[:login_failed] %>
+        <p class="error">Sorry, your username or password were incorrect</p>
+      <% end %>
+
+      <form action="<%= page.path %>" method="post">
+        <p>
+          <label for="name">Username</label>
+          <input type="text" id="username" name="username" value="<%= params['username'] %>">
+        </p>
+        <p>
+          <label for="password">Password</label>
+          <input type="password" name="password" id="password" <% if flash[:login_failed] %>class="error"<% end %>>
+        </p>
+        <input type="submit" value="Login">
+      </form>
+    </div>
+  </body>
+</html>
