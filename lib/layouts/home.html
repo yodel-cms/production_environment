@@ -40,7 +40,7 @@
       <ul>
         <% Site.all.each do |site| %>
           <% unless site.name == 'yodel' %>
-            <li><%= site.name %> - <a href="<%= site.domains.first %>"><%= site.domains.first %></a></li>
+            <li><%= site.name %> - <a href="http://<%= site.domains.first %>/"><%= site.domains.first %></a></li>
           <% end %>
         <% end %>
       </ul>
